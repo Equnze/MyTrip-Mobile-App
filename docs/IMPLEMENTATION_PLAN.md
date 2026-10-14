@@ -8,7 +8,7 @@
 |---|---|
 | App | Expo SDK 57 (`expo ~57.0.28`), RN 0.86, React 19.2, Expo Router, npm |
 | Platforms | iOS + Android. Web = one public share route only |
-| Auth | Clerk (`@clerk/expo` 4.11, peer `expo >=54 <58` ✓) — native Google + Apple, dev build required |
+| Auth | Clerk (`@clerk/expo` 4.11, peer `expo >=54 <58` ✓) — Google via browser SSO, Apple native on iOS / browser SSO elsewhere; dev build required |
 | Backend | Expo Router API routes (`+api.ts`) on **EAS Hosting (Cloudflare Workers runtime)** |
 | DB | Neon Postgres via `@neondatabase/serverless` (HTTP) + Drizzle ORM |
 | Jobs | Inngest (`inngest` 4.x, `inngest/edge` serve handler) |
@@ -220,8 +220,8 @@ Each phase ends green on `npx expo lint` and `npx tsc --noEmit`.
 - **Exit criteria:** all spikes pass, or a documented fallback is chosen (e.g. move `/api/inngest` to a small Hono worker).
 
 ### Phase 1 — Auth and app shell
-- `npx expo install @clerk/expo expo-secure-store expo-crypto expo-apple-authentication @clerk/expo-google-signin`, add the config plugins, then build a dev build (`eas build --profile development`).
-- `sign-in.tsx` uses `useSignInWithGoogle` / `useSignInWithApple`. The root layout uses `Stack.Protected` driven by `useAuth().isSignedIn`. Apple sign-in is shown on iOS only.
+- `npx expo install @clerk/expo expo-secure-store expo-crypto expo-apple-authentication expo-auth-session expo-web-browser`, add the config plugins, then build a dev build (`eas build --profile development`).
+- `(auth)/sign-in.tsx` uses `useSSO` (`oauth_google`) for Google, and for Apple `useSignInWithApple` on iOS or `useSSO` (`oauth_apple`) elsewhere. `(auth)` and `(app)` layouts guard on `useAuth()` (`isLoaded` then `isSignedIn`).
 - `lib/api.ts`: a fetch wrapper that attaches `await getToken()`. Server `requireUser` uses `@clerk/backend` to verify tokens.
 - Set up Sentry with the wizard (`npx @sentry/wizard@latest -i reactNative`) and attach the Clerk user ID.
 
@@ -278,7 +278,7 @@ Each phase ends green on `npx expo lint` and `npx tsc --noEmit`.
   - Version guard on stale jobs.
   - Share route never leaks user data.
 - **Manual QA matrix:** iOS and Android physical devices covering:
-  - Sign-in (Google, plus Apple on iOS).
+  - Sign-in with Google and Apple on both platforms.
   - Generate trips of 1, 7 and 14 days.
   - Leave mid-generation and come back.
   - Airplane mode on a cached trip.
@@ -316,7 +316,7 @@ Each phase ends green on `npx expo lint` and `npx tsc --noEmit`.
 7. **Cost:** the estimate is unverified. Measure in Phase 0, then tune effort, caps and prompt caching.
 8. **ImageKit signed-upload details:** the exact current auth scheme, HEIC support and size limits still need confirming from the docs in Phase 6.
 9. **Public share page moderation:** custom covers are publicly visible through share links. Tokens can't be guessed and can be revoked; moderation is deferred to v2.
-10. **Apple on Android:** we hide it rather than ship a browser-based flow.
+10. **Apple on Android:** uses Clerk's browser SSO flow (no native Apple sheet on Android), so the UX is a browser sheet rather than native.
 11. **`web.output: "server"`** plus native-only routes need checking: there must be no accidental public web exposure of `(app)` screens (gate them with `Platform.OS` or a redirect on web).
 
 ## 10. v2 candidates (don't paint into a corner)

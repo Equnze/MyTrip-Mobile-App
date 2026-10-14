@@ -39,11 +39,11 @@ Tick items (`- [x]`) as they're completed. Design details, data model, assumptio
 
 ## Phase 1 — Auth & app shell
 
-- [ ] Install Clerk packages (`@clerk/expo`, `expo-secure-store`, `expo-crypto`, `expo-apple-authentication`, `@clerk/expo-google-signin`) + config plugins
+- [ ] Install Clerk packages (`@clerk/expo`, `expo-secure-store`, `expo-crypto`, `expo-apple-authentication`, `expo-auth-session`) + config plugins
 - [ ] Create a development build (iOS + Android)
 - [ ] `ClerkProvider` with secure-store token cache in root layout
 - [ ] Sign-in screen with "Continue with Google"
-- [ ] "Sign in with Apple" button (iOS only)
+- [ ] "Continue with Apple" button (native on iOS, browser SSO on Android)
 - [ ] Protected routing: signed-out → sign-in, signed-in → `(app)` stack
 - [ ] Sign out
 - [ ] Client API wrapper (`lib/api.ts`) that attaches the Clerk session token
@@ -218,7 +218,7 @@ Tick items (`- [x]`) as they're completed. Design details, data model, assumptio
 ## Manual QA matrix (run before release)
 
 - [ ] Sign in with Google (iOS + Android)
-- [ ] Sign in with Apple (iOS)
+- [ ] Sign in with Apple (iOS native + Android browser flow)
 - [ ] Generate 1-day, 7-day and 14-day trips
 - [ ] Leave the app mid-generation, return, trip is ready
 - [ ] Generation failure shows "Try again" and doesn't use a credit
