@@ -9,22 +9,22 @@ Tick items (`- [x]`) as they're completed. Design details, data model, assumptio
 ## Phase 0 — Foundations & spikes
 
 ### Project setup
-- [ ] Remove leftover template code; clean `src/app/index.tsx` and `_layout.tsx`
+- [x] Remove leftover template code; clean `src/app/index.tsx` and `_layout.tsx`
 - [ ] Set `web.output: "server"` in `app.json` (required for API routes)
 - [ ] Set up folder structure: `src/server`, `src/shared`, `src/features`, `src/components`, `src/lib`
-- [ ] Configure `@/` path alias in `tsconfig.json`
+- [x] Configure `@/` path alias in `tsconfig.json`
 - [ ] Create EAS project (`npx eas-cli@latest init`) and `eas.json` with `development` / `production` profiles
 - [ ] Add `.env.example` documenting every required env var
 - [ ] Set up Vitest for `src/server` and `src/shared`
 
 ### Accounts & keys (dev)
-- [ ] Clerk dev instance with Google + Apple connections enabled
-- [ ] Neon project with `main` (prod) and `dev` branches
-- [ ] Inngest account + dev environment
-- [ ] Anthropic API key
-- [ ] Unsplash developer app (demo tier)
-- [ ] ImageKit account (URL endpoint, public/private keys)
-- [ ] Sentry project (React Native)
+- [x] Clerk dev instance with Google + Apple connections enabled
+- [x] Neon project with `main` (prod) and `dev` branches
+- [x] Inngest account + dev environment
+- [x] Anthropic API key
+- [x] Unsplash developer app (demo tier)
+- [x] ImageKit account (URL endpoint, public/private keys)
+- [x] Sentry project (React Native)
 
 ### Spikes (prove before building)
 - [ ] Deploy a hello-world `+api.ts` to EAS Hosting
@@ -39,18 +39,19 @@ Tick items (`- [x]`) as they're completed. Design details, data model, assumptio
 
 ## Phase 1 — Auth & app shell
 
-- [ ] Install Clerk packages (`@clerk/expo`, `expo-secure-store`, `expo-crypto`, `expo-apple-authentication`, `expo-auth-session`) + config plugins
-- [ ] Create a development build (iOS + Android)
-- [ ] `ClerkProvider` with secure-store token cache in root layout
-- [ ] Sign-in screen with "Continue with Google"
-- [ ] "Continue with Apple" button (native on iOS, browser SSO on Android)
-- [ ] Protected routing: signed-out → sign-in, signed-in → `(app)` stack
-- [ ] Sign out
+- [x] Install Clerk packages (`@clerk/expo`, `expo-secure-store`, `expo-crypto`, `expo-apple-authentication`, `expo-auth-session`) + config plugins
+- [x] Create a development build (iOS + Android)
+- [x] `ClerkProvider` with secure-store token cache in root layout
+- [x] Auth screen (`(auth)/sign-in.tsx`) with "Continue with Google" (browser SSO)
+- [x] "Continue with Apple" on the same screen (native on iOS, browser SSO on Android)
+- [x] Protected routing: signed-out → sign-in, signed-in → `(app)` stack
+- [x] Sign out
 - [ ] Client API wrapper (`lib/api.ts`) that attaches the Clerk session token
 - [ ] Server `requireUser()`: verify Clerk token with `@clerk/backend`, return 401 if invalid
 - [ ] Lazy user upsert into Neon on first authenticated API call
-- [ ] Sentry React Native setup via wizard; tag events with user id
-- [ ] Prevent `(app)` screens from rendering on web
+- [x] Sentry React Native setup (manual Expo setup: config plugin, Metro, `Sentry.init`, `Sentry.wrap`)
+- [ ] Tag Sentry events with the Clerk user id
+- [x] Prevent `(app)` screens from rendering on web
 
 ---
 
