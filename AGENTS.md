@@ -81,7 +81,7 @@ drizzle/          # generated migrations
 ```
 
 - **Client vs server:** the app talks only to our own `/api/*` routes. Secrets, Drizzle, Claude, Inngest, the ImageKit private key and Unsplash calls live only in `src/server/` and API routes. Never import `src/server/*` from screens or components.
-- **API routes:** every route except `/api/share/*` and `/api/inngest` must verify the Clerk session (`requireUser`). Validate all input with Zod. Return errors as `{ error: { code, message } }`.
+- **API routes:** every route except `/api/share/*`, `/api/inngest` and `/api/webhooks/*` must verify the Clerk session (`requireUser`). Webhook routes are authenticated by their signature instead (Clerk: `verifyWebhook` with `CLERK_WEBHOOK_SIGNING_SECRET`). Validate all input with Zod. Return errors as `{ error: { code, message } }`.
 - **Workers runtime:** API routes run on Cloudflare Workers. Use only Workers-compatible packages and APIs: `fetch`, Web Crypto, the Neon HTTP driver. No native Node addons, `fs` or long-lived sockets.
 - **Database:**
   - Define the Drizzle schema in TypeScript; it is the source of truth.

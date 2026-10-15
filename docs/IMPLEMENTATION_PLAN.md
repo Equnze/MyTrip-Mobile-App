@@ -50,7 +50,7 @@ src/
       uploads/auth+api.ts           # GET ImageKit signed upload params
   server/                           # server-only, never imported by screens
     db/{client,schema}.ts
-    auth.ts                         # requireUser(request) → verify Clerk token + upsert user
+    auth.ts                         # requireUser(request) → verify Clerk token
     limits.ts                       # cap checks
     ai/{client,prompts,schemas}.ts  # Claude calls + Zod output schemas
     inngest/{client,functions/*}.ts
@@ -183,7 +183,7 @@ JSON shapes (in `shared/trip-schema.ts`):
 
 ## 5. API surface
 
-Every route except `/api/share/*` and `/api/inngest` calls `requireUser(request)`. That verifies the Clerk session token from `Authorization: Bearer`, upserts the user lazily, and returns a 401 otherwise. All inputs are Zod-validated, and errors use the shape `{ error: { code, message } }`.
+Every route except `/api/share/*`, `/api/inngest` and `/api/webhooks/*` calls `requireUser(request)`. That verifies the Clerk session token from `Authorization: Bearer` and returns a 401 otherwise. Users are kept in sync with Clerk by the `user.created`, `user.updated` and `user.deleted` webhooks (`/api/webhooks/clerk`, signature-verified). Each becomes an Inngest event (`clerk/user.*`, event id = webhook delivery id), and the `sync-user-created` / `sync-user-updated` / `sync-user-deleted` functions insert, upsert or delete the row (all idempotent on the Clerk user id). All inputs are Zod-validated, and errors use the shape `{ error: { code, message } }`.
 
 | Method | Route | Notes |
 |---|---|---|

@@ -10,7 +10,7 @@ Tick items (`- [x]`) as they're completed. Design details, data model, assumptio
 
 ### Project setup
 - [x] Remove leftover template code; clean `src/app/index.tsx` and `_layout.tsx`
-- [ ] Set `web.output: "server"` in `app.json` (required for API routes)
+- [x] Set `web.output: "server"` in `app.json` (required for API routes)
 - [ ] Set up folder structure: `src/server`, `src/shared`, `src/features`, `src/components`, `src/lib`
 - [x] Configure `@/` path alias in `tsconfig.json`
 - [ ] Create EAS project (`npx eas-cli@latest init`) and `eas.json` with `development` / `production` profiles
@@ -48,7 +48,9 @@ Tick items (`- [x]`) as they're completed. Design details, data model, assumptio
 - [x] Sign out
 - [ ] Client API wrapper (`lib/api.ts`) that attaches the Clerk session token
 - [ ] Server `requireUser()`: verify Clerk token with `@clerk/backend`, return 401 if invalid
-- [ ] Lazy user upsert into Neon on first authenticated API call
+- [x] User sync (created): Clerk `user.created` webhook (`/api/webhooks/clerk`) → Inngest `clerk/user.created` → `sync-user-created` inserts into Neon
+- [x] User sync (updated): `user.updated` → Inngest `clerk/user.updated` → `sync-user-updated` upserts the row (safe if it arrives before the create)
+- [x] User sync (deleted): `user.deleted` → Inngest `clerk/user.deleted` → `sync-user-deleted` deletes the row
 - [x] Sentry React Native setup (manual Expo setup: config plugin, Metro, `Sentry.init`, `Sentry.wrap`)
 - [ ] Tag Sentry events with the Clerk user id
 - [x] Prevent `(app)` screens from rendering on web
@@ -57,8 +59,8 @@ Tick items (`- [x]`) as they're completed. Design details, data model, assumptio
 
 ## Phase 2 — Database & core API
 
-- [ ] Drizzle client using Neon HTTP driver
-- [ ] Schema: `users`
+- [x] Drizzle client using Neon HTTP driver
+- [x] Schema: `users`
 - [ ] Schema: `trips` (inputs, JSONB outputs, status, cover, share token, generation version)
 - [ ] Schema: `generations` (caps, refunds, token usage, cost)
 - [ ] Schema: `unsplash_cache`
@@ -86,7 +88,7 @@ Tick items (`- [x]`) as they're completed. Design details, data model, assumptio
 - [ ] Record token usage and cost on the `generations` row
 
 ### Inngest
-- [ ] Inngest client + `/api/inngest` route
+- [x] Inngest client + `/api/inngest` route (dev mode)
 - [ ] `generate-trip` function: load → plan skeleton → generate days in parallel → images → save
 - [ ] Per-user concurrency limit and retries (3)
 - [ ] Idempotency (event id = generation id)
